@@ -11,9 +11,12 @@ Begin["`Private`"];
 
 Options[iMonitorMap] = {
 	"Monitor" -> True,
-	"DisplayThreshold" -> 2
+	"DisplayThreshold" -> 1.5,
+	UpdateInterval -> 2,
+	TrackedSymbols -> {},
+	"ProgressMessageFunction" -> (""&)
 };
-iMonitorMap[foo_, values_List, OptionsPattern[]] := Module[
+iMonitorMap[foo_, values_List, opts : OptionsPattern[]] := Module[
 	{v, counter},
 	counter = 0;
 	Monitor[
@@ -24,22 +27,40 @@ iMonitorMap[foo_, values_List, OptionsPattern[]] := Module[
 			],
 			{v, values}
 		],
-		monitorDisplay[v, counter, {0, Length[values]}],
+		Refresh[
+			Column[
+				{
+				(* Basic progress monitoring *)
+					Row[
+						{
+							ProgressIndicator[counter, {0, Length[values]}],
+							StringTemplate["``/``"][counter, Length[values]]
+						},
+						Spacer[1]
+					],
+				
+				(* Custom function for showing progress *)
+					OptionValue["ProgressMessageFunction"][
+						<|
+							"CurrentValue" -> v,
+							"CurrentCount" -> counter,
+							"StartCount" -> 0,
+							"EndCount" -> Length[values]
+						|>
+					]
+				}
+			],
+			UpdateInterval -> OptionValue[UpdateInterval],
+			TrackedSymbols -> OptionValue[TrackedSymbols]
+		],
 		OptionValue["DisplayThreshold"]
 	]
 ];
 
-
-Options[monitorDisplay] = {
-	"TrackedSymbols" -> {},
-	"UpdateInterval" -> OptionValue[iMonitorMap, "DisplayThreshold"]
-};
-monitorDisplay[currentValue_, currentCount_Integer, {startCount_Integer, endCount_Integer}, opts : OptionsPattern[]] := With[{},
-	Refresh[ProgressIndicator[currentCount, {startCount, endCount}], opts]
+Options[MonitorMap] = Join[
+	Options[iMonitorMap],
+	Options[monitorDisplay]
 ];
-
-
-Options[MonitorMap] = Options[iMonitorMap];
 MonitorMap[foo_, values_List, opts : OptionsPattern[]] := Which[
 	OptionValue["Monitor"],
 	iMonitorMap[foo, values, opts],
