@@ -1,0 +1,284 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Load Package", "Section"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Get", "[", "\"\<MonitorTools`\>\"", "]"}]}], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Run Tests", "Section"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"allTests", "=", 
+   RowBox[{"FileNames", "[", 
+    RowBox[{"\"\<*.wlt\>\"", ",", 
+     RowBox[{"Directory", "[", "]"}], ",", "Infinity"}], "]"}]}], 
+  ";"}]}], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"results", "=", 
+  RowBox[{"TestReport", "/@", "allTests"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  InterpretationBox[
+   RowBox[{
+    TagBox["TestReportObject",
+     "SummaryHead"], "[", 
+    DynamicModuleBox[{Typeset`open$$ = False}, 
+     PanelBox[
+      PaneSelectorBox[{False->GridBox[{
+         {
+          PaneBox[
+           ButtonBox[
+            
+            DynamicBox[FEPrivate`FrontEndResource[
+             "FEBitmaps", "SquarePlusIconMedium"],
+             ImageSizeCache->{12., {0., 12.}}],
+            Appearance->None,
+            ButtonFunction:>(Typeset`open$$ = True),
+            Evaluator->Automatic,
+            Method->"Preemptive"],
+           Alignment->{Center, Center},
+           
+           ImageSize->
+            Dynamic[{
+             Automatic, 3.5 CurrentValue["FontCapHeight"]/
+              AbsoluteCurrentValue[Magnification]}]], 
+          GraphicsBox[InsetBox[
+            PaneBox[
+             
+             DynamicBox[FEPrivate`FrontEndResource[
+              "MUnitExpressions", "SuccessIcon"],
+              ImageSizeCache->{16., {4., 8.}}],
+             Alignment->Center,
+             
+             ImageSize->
+              Dynamic[{
+               Automatic, 3.5 CurrentValue["FontCapHeight"]/
+                AbsoluteCurrentValue[Magnification]}]]],
+           AspectRatio->1,
+           Axes->False,
+           Background->GrayLevel[0.93],
+           Frame->True,
+           FrameStyle->Directive[
+             Thickness[Tiny], 
+             GrayLevel[0.55]],
+           FrameTicks->None,
+           ImageSize->{Automatic, 
+             Dynamic[
+             3.5 CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+              Magnification]]},
+           PlotRange->{{0, 1}, {0, 1}}], GridBox[{
+            {
+             RowBox[{
+              TagBox["\<\"Title: \"\>",
+               "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+              TagBox["\<\"Test Report: MonitorTools.wlt\"\>",
+               "SummaryItem"]}], "\[SpanFromLeft]"},
+            {
+             RowBox[{
+              TagBox["\<\"Success rate: \"\>",
+               "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+              TagBox[
+               TemplateBox[{"100","\"%\""},
+                "RowDefault"],
+               "SummaryItem"]}], 
+             RowBox[{
+              TagBox["\<\"Tests run: \"\>",
+               "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+              TagBox["1",
+               "SummaryItem"]}]}
+           },
+           AutoDelete->False,
+           
+           BaseStyle->{
+            ShowStringCharacters -> False, NumberMarks -> False, 
+             PrintPrecision -> 3, ShowSyntaxStyles -> False},
+           GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Automatic}}},
+           
+           GridBoxItemSize->{
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+           GridBoxSpacings->{"Columns" -> {{2}}, "Rows" -> {{Automatic}}}]}
+        },
+        AutoDelete->False,
+        BaselinePosition->{1, 1},
+        GridBoxAlignment->{"Rows" -> {{Top}}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}], True->GridBox[{
+         {
+          PaneBox[
+           ButtonBox[
+            DynamicBox[FEPrivate`FrontEndResource[
+             "FEBitmaps", "SquareMinusIconMedium"]],
+            Appearance->None,
+            ButtonFunction:>(Typeset`open$$ = False),
+            Evaluator->Automatic,
+            Method->"Preemptive"],
+           Alignment->{Center, Center},
+           
+           ImageSize->
+            Dynamic[{
+             Automatic, 3.5 CurrentValue["FontCapHeight"]/
+              AbsoluteCurrentValue[Magnification]}]], 
+          GraphicsBox[InsetBox[
+            PaneBox[
+             
+             DynamicBox[FEPrivate`FrontEndResource[
+              "MUnitExpressions", "SuccessIcon"]],
+             Alignment->Center,
+             
+             ImageSize->
+              Dynamic[{
+               Automatic, 3.5 CurrentValue["FontCapHeight"]/
+                AbsoluteCurrentValue[Magnification]}]]],
+           AspectRatio->1,
+           Axes->False,
+           Background->GrayLevel[0.93],
+           Frame->True,
+           FrameStyle->Directive[
+             Thickness[Tiny], 
+             GrayLevel[0.55]],
+           FrameTicks->None,
+           ImageSize->{Automatic, 
+             Dynamic[
+             3.5 CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+              Magnification]]},
+           PlotRange->{{0, 1}, {0, 1}}], GridBox[{
+            {
+             RowBox[{
+              TagBox["\<\"Title: \"\>",
+               "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+              TagBox["\<\"Test Report: MonitorTools.wlt\"\>",
+               "SummaryItem"]}], "\[SpanFromLeft]"},
+            {
+             RowBox[{
+              TagBox["\<\"Success rate: \"\>",
+               "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+              TagBox[
+               TemplateBox[{"100","\"%\""},
+                "RowDefault"],
+               "SummaryItem"]}], 
+             RowBox[{
+              TagBox["\<\"Tests run: \"\>",
+               "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+              TagBox["1",
+               "SummaryItem"]}]},
+            {
+             RowBox[{
+              TagBox["\<\"Succeeded: \"\>",
+               "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+              TagBox["1",
+               "SummaryItem"]}], "\[SpanFromLeft]"},
+            {
+             RowBox[{
+              TagBox["\<\"Failed: \"\>",
+               "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+              TagBox["0",
+               "SummaryItem"]}], "\[SpanFromLeft]"},
+            {
+             RowBox[{
+              TagBox["\<\"Failed with wrong results: \"\>",
+               "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+              TagBox["0",
+               "SummaryItem"]}], "\[SpanFromLeft]"},
+            {
+             RowBox[{
+              TagBox["\<\"Failed with messages: \"\>",
+               "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+              TagBox["0",
+               "SummaryItem"]}], "\[SpanFromLeft]"},
+            {
+             RowBox[{
+              TagBox["\<\"Failed with errors: \"\>",
+               "SummaryItemAnnotation"], "\[InvisibleSpace]", 
+              TagBox["0",
+               "SummaryItem"]}], "\[SpanFromLeft]"}
+           },
+           AutoDelete->False,
+           
+           BaseStyle->{
+            ShowStringCharacters -> False, NumberMarks -> False, 
+             PrintPrecision -> 3, ShowSyntaxStyles -> False},
+           GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Automatic}}},
+           
+           GridBoxItemSize->{
+            "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+           GridBoxSpacings->{"Columns" -> {{2}}, "Rows" -> {{Automatic}}}]}
+        },
+        AutoDelete->False,
+        BaselinePosition->{1, 1},
+        GridBoxAlignment->{"Rows" -> {{Top}}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}]}, Dynamic[
+       Typeset`open$$],
+       ImageSize->Automatic],
+      BaselinePosition->Baseline],
+     DynamicModuleValues:>{}], "]"}],
+   TestReportObject[
+    Association[
+    "Title" -> "Test Report: MonitorTools.wlt", "TimeElapsed" -> 
+     Quantity[0.43, "Seconds"], "TestsSucceededCount" -> 1, 
+     "TestsFailedCount" -> 0, "TestsFailedWrongResultsCount" -> 0, 
+     "TestsFailedWithMessagesCount" -> 0, "TestsFailedWithErrorsCount" -> 0, 
+     "Aborted" -> False, "TestResults" -> Association[1 -> TestResultObject[
+         Association[
+         "TestIndex" -> 1, "TestID" -> "Get-Package", "Outcome" -> "Success", 
+          "Input" -> HoldForm[
+            Get["MonitorTools.wl"]], "ExpectedOutput" -> HoldForm[Null], 
+          "ActualOutput" -> HoldForm[Null], "ExpectedMessages" -> {}, 
+          "ActualMessages" -> {}, "AbsoluteTimeUsed" -> 
+          Quantity[0.0010007`4.150818897616804, "Seconds"], "CPUTimeUsed" -> 
+          Quantity[0., "Seconds"], "MemoryUsed" -> Quantity[232, "Bytes"]]]], 
+     "TestsSucceededIndices" -> {1}, "TestsFailedIndices" -> {}, 
+     "TestsFailedWrongResultsIndices" -> {}, 
+     "TestsFailedWithMessagesIndices" -> {}, 
+     "TestsFailedWithErrorsIndices" -> {}]],
+   Editable->False,
+   SelectWithContents->True,
+   Selectable->False], "}"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"#", "[", "\"\<TestsFailed\>\"", "]"}], "&"}], "/@", 
+  "results"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\[LeftAssociation]", 
+   RowBox[{
+    RowBox[{"\<\"TestsFailedWrongResults\"\>", "\[Rule]", 
+     RowBox[{"\[LeftAssociation]", "\[RightAssociation]"}]}], ",", 
+    RowBox[{"\<\"TestsFailedWithMessages\"\>", "\[Rule]", 
+     RowBox[{"\[LeftAssociation]", "\[RightAssociation]"}]}], ",", 
+    RowBox[{"\<\"TestsFailedWithErrors\"\>", "\[Rule]", 
+     RowBox[{"\[LeftAssociation]", "\[RightAssociation]"}]}]}], 
+   "\[RightAssociation]"}], "}"}]], "Output"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{958, 988},
+WindowMargins->{{Automatic, -7}, {Automatic, 0}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TrackCellChangeTimes->False,
+FrontEndVersion->"11.0 for Microsoft Windows (64-bit) (September 21, 2016)",
+StyleDefinitions->"ReverseColor.nb"
+]
