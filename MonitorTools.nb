@@ -101,7 +101,7 @@ Cell[BoxData[
              RowBox[{
               TagBox["\<\"Tests run: \"\>",
                "SummaryItemAnnotation"], "\[InvisibleSpace]", 
-              TagBox["1",
+              TagBox["2",
                "SummaryItem"]}]}
            },
            AutoDelete->False,
@@ -176,13 +176,13 @@ Cell[BoxData[
              RowBox[{
               TagBox["\<\"Tests run: \"\>",
                "SummaryItemAnnotation"], "\[InvisibleSpace]", 
-              TagBox["1",
+              TagBox["2",
                "SummaryItem"]}]},
             {
              RowBox[{
               TagBox["\<\"Succeeded: \"\>",
                "SummaryItemAnnotation"], "\[InvisibleSpace]", 
-              TagBox["1",
+              TagBox["2",
                "SummaryItem"]}], "\[SpanFromLeft]"},
             {
              RowBox[{
@@ -232,7 +232,7 @@ Cell[BoxData[
    TestReportObject[
     Association[
     "Title" -> "Test Report: MonitorTools.wlt", "TimeElapsed" -> 
-     Quantity[0.43, "Seconds"], "TestsSucceededCount" -> 1, 
+     Quantity[0.45, "Seconds"], "TestsSucceededCount" -> 2, 
      "TestsFailedCount" -> 0, "TestsFailedWrongResultsCount" -> 0, 
      "TestsFailedWithMessagesCount" -> 0, "TestsFailedWithErrorsCount" -> 0, 
      "Aborted" -> False, "TestResults" -> Association[1 -> TestResultObject[
@@ -242,10 +242,24 @@ Cell[BoxData[
             Get["MonitorTools.wl"]], "ExpectedOutput" -> HoldForm[Null], 
           "ActualOutput" -> HoldForm[Null], "ExpectedMessages" -> {}, 
           "ActualMessages" -> {}, "AbsoluteTimeUsed" -> 
-          Quantity[0.0010007`4.150818897616804, "Seconds"], "CPUTimeUsed" -> 
-          Quantity[0., "Seconds"], "MemoryUsed" -> Quantity[232, "Bytes"]]]], 
-     "TestsSucceededIndices" -> {1}, "TestsFailedIndices" -> {}, 
-     "TestsFailedWrongResultsIndices" -> {}, 
+          Quantity[0.0312679`5.645613712172537, "Seconds"], "CPUTimeUsed" -> 
+          Quantity[0.030999999999998806`, "Seconds"], "MemoryUsed" -> 
+          Quantity[1904, "Bytes"]]], 2 -> TestResultObject[
+         Association[
+         "TestIndex" -> 2, "TestID" -> "Mirror-Map", "Outcome" -> "Success", 
+          "Input" -> HoldForm[
+            MonitorTools`MonitorMap[Sin, {1, 2, 3}]], "ExpectedOutput" -> 
+          HoldForm[{
+             Sin[1], 
+             Sin[2], 
+             Sin[3]}], "ActualOutput" -> HoldForm[{
+             Sin[1], 
+             Sin[2], 
+             Sin[3]}], "ExpectedMessages" -> {}, "ActualMessages" -> {}, 
+          "AbsoluteTimeUsed" -> Quantity[0``7.150514997831988, "Seconds"], 
+          "CPUTimeUsed" -> Quantity[0., "Seconds"], "MemoryUsed" -> 
+          Quantity[312, "Bytes"]]]], "TestsSucceededIndices" -> {1, 2}, 
+     "TestsFailedIndices" -> {}, "TestsFailedWrongResultsIndices" -> {}, 
      "TestsFailedWithMessagesIndices" -> {}, 
      "TestsFailedWithErrorsIndices" -> {}]],
    Editable->False,
@@ -272,6 +286,70 @@ Cell[BoxData[
     RowBox[{"\<\"TestsFailedWithErrors\"\>", "\[Rule]", 
      RowBox[{"\[LeftAssociation]", "\[RightAssociation]"}]}]}], 
    "\[RightAssociation]"}], "}"}]], "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Scratch area", "Section"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Get", "[", "\"\<MonitorTools`\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"MonitorMap", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Pause", "[", "1", "]"}], "&"}], ",", 
+   RowBox[{"CharacterRange", "[", 
+    RowBox[{"\"\<A\>\"", ",", "\"\<E\>\""}], "]"}]}], "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"Null", ",", "Null", ",", "Null", ",", "Null", ",", "Null"}], 
+  "}"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Options", "[", "MonitorMap", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"\<\"Monitor\"\>", "\[Rule]", "True"}], ",", 
+   RowBox[{"\<\"DisplayThreshold\"\>", "\[Rule]", "3"}]}], "}"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Options", "[", "Refresh", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"TrackedSymbols", "\[Rule]", "Automatic"}], ",", 
+   RowBox[{"UpdateInterval", "\[Rule]", "\[Infinity]"}]}], "}"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Options", "[", "MonitorTools`Private`monitorDisplay", 
+  "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"\<\"TrackedSymbols\"\>", "\[Rule]", 
+    RowBox[{"{", "}"}]}], ",", 
+   RowBox[{"\<\"UpdateInterval\"\>", "\[Rule]", "3"}]}], "}"}]], "Output"]
 }, Open  ]]
 }, Open  ]]
 },
