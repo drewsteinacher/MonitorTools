@@ -7,14 +7,14 @@ VerificationTest[
 ];
 
 VerificationTest[
-	MonitorMap[Sin, {1, 2, 3}],
+	MonitorTools`MonitorMap[Sin, {1, 2, 3}],
 	{Sin[1], Sin[2], Sin[3]},
 	TestID -> "Mirror-Map"
 ];
 
 VerificationTest[
 	Reap[
-		MonitorMap[
+		MonitorTools`MonitorMap[
 			Identity,
 			CharacterRange["A", "E"],
 			"Monitor" -> False,
@@ -28,7 +28,7 @@ VerificationTest[
 
 VerificationTest[
 	Reap[
-		MonitorMap[
+		MonitorTools`MonitorMap[
 			Identity,
 			CharacterRange["A", "E"],
 			"ProgressMessageFunction" -> (Sow[#CurrentValue]&),
@@ -42,7 +42,7 @@ VerificationTest[
 
 VerificationTest[
 	Reap[
-		MonitorMap[
+		MonitorTools`MonitorMap[
 			(Pause[0.5]; #) &,
 			CharacterRange["A", "E"],
 			"ProgressMessageFunction" -> (Sow[#CurrentValue]&),
@@ -56,7 +56,7 @@ VerificationTest[
 
 VerificationTest[
 	Reap[
-		MonitorMap[
+		MonitorTools`MonitorMap[
 			(Pause[0.5]; #) &,
 			CharacterRange["A", "E"],
 			"ProgressMessageFunction" -> (Sow[#CurrentValue]&),
@@ -71,7 +71,7 @@ VerificationTest[
 
 VerificationTest[
 	Reap[
-		MonitorMap[
+		MonitorTools`MonitorMap[
 			(Pause[0.5]; #) &,
 			CharacterRange["A", "E"],
 			"ProgressMessageFunction" -> (Sow[#CurrentValue]&),
