@@ -116,4 +116,18 @@ VerificationTest[
 	TestID -> "MonitorTable-Mirror-Table-with-list-of-values-2"
 ];
 
+VerificationTest[
+	MonitorTools`MonitorMap[If[# === "C", Abort[], #]&, CharacterRange["A", "E"]],
+	{"A", "B"},
+	{MonitorTools`MonitorMap::aborted},
+	TestID -> "Abortability"
+];
+
+VerificationTest[
+	MonitorTools`MonitorMap[Abort[]&, CharacterRange["A", "E"]],
+	{},
+	{MonitorTools`MonitorMap::aborted},
+	TestID -> "Abortability-1"
+];
+
 EndTestSection[];
