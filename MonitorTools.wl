@@ -8,6 +8,7 @@ Effectively performs Map[foo, {x_1, x_2, ...}] with a progress bar and other fea
 
 Begin["`Private`"];
 
+MonitorMap::aborted = "Aborted after `` of `` (~``% complete)";
 
 Options[iMonitorMap] = {
 	"Monitor" -> True,
@@ -17,16 +18,22 @@ Options[iMonitorMap] = {
 	"ProgressMessageFunction" -> (""&)
 };
 iMonitorMap[foo_, values_List, opts : OptionsPattern[]] := Module[
-	{v, counter},
+	{v, counter, sowTag},
 	counter = 0;
 	Monitor[
-		Table[
-			With[{result = foo[v]},
-				counter++;
-				result
+		Reap[
+			CheckAbort[
+				Do[
+					With[{result = foo[v]},
+						Sow[result, sowTag];
+						counter++;
+					],
+					{v, values}
+				],
+				Message[MonitorMap::aborted, counter, Length[values], Round @ N[100. * counter / Length[values]]]
 			],
-			{v, values}
-		],
+			sowTag
+		] // Last // Apply[Join],
 		Refresh[
 			Column[
 				{
