@@ -84,4 +84,36 @@ VerificationTest[
 	TestID -> "UpdateInterval-zero-means-repeatedly-called-for-all-inputs"
 ];
 
+VerificationTest[
+	Reap[
+		MonitorTools`MonitorTable[Sow[i]; i^2, {i, 1, 3, 1}]
+	],
+	{{1, 4, 9}, {{1, 2, 3}}},
+	TestID -> "MonitorTable-No-EvaluationLeaks"
+];
+
+VerificationTest[
+	MonitorTools`MonitorTable[i, {i, 1, 3, 2}],
+	{1, 3},
+	TestID -> "MonitorTable-Mirror-Table-with-step"
+];
+
+VerificationTest[
+	MonitorTools`MonitorTable[i, {i, 1, 3}],
+	{1, 2, 3},
+	TestID -> "MonitorTable-Mirror-Table-without-step"
+];
+
+VerificationTest[
+	MonitorTools`MonitorTable[ToUpperCase[i], {i, {"a", "b", "c"}}],
+	{"A", "B", "C"},
+	TestID -> "MonitorTable-Mirror-Table-with-list-of-values"
+];
+
+VerificationTest[
+	MonitorTools`MonitorTable[ToUpperCase[i], {i, CharacterRange["a", "e"]}],
+	{"A", "B", "C", "D", "E"},
+	TestID -> "MonitorTable-Mirror-Table-with-list-of-values-2"
+];
+
 EndTestSection[];
