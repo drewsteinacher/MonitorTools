@@ -70,6 +70,27 @@ MonitorMap[foo_, values_List, opts : OptionsPattern[]] := Which[
 ];
 
 
+
+Attributes[MonitorTable] = {HoldFirst};
+Options[MonitorTable] = Join[
+	Options[iMonitorMap],
+	Options[monitorDisplay]
+];
+
+MonitorTable[foo_, {i_Symbol, start_, end_, step_: 1}, opts : OptionsPattern[]] := MonitorTable[foo, {i, Range[start, end, step]}, opts];
+
+MonitorTable[foo_, {i_Symbol, values_List}, opts : OptionsPattern[]] := Which[
+	OptionValue["Monitor"],
+	iMonitorMap[
+		Function @@ (Hold[foo] /. i :> With[{eval = Slot[]}, eval /; True]),
+		values,
+		opts
+	],
+	
+	True,
+	Table[foo, {i, values}]
+];
+
 End[];
 
 EndPackage[];
