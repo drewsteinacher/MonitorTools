@@ -5,6 +5,8 @@ BeginPackage["MonitorTools`"];
 
 MonitorMap::usage = "MonitorMap[foo, {x_1, x_2, ...}]
 Effectively performs Map[foo, {x_1, x_2, ...}] with a progress bar and other features.";
+MonitorTable::usage = "MonitorTable[foo, ...]
+Effectively performs Table[foo, ...] with a progress bar and other features.";
 
 Begin["`Private`"];
 
