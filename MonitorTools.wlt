@@ -130,4 +130,17 @@ VerificationTest[
 	TestID -> "Abortability-1"
 ];
 
+VerificationTest[
+	MonitorTools`MonitorAssociationMap[f, {1, 2, 3}],
+	<| 1 -> f[1], 2 -> f[2], 3 -> f[3]|>,
+	TestID -> "MonitorAssociationMap-Mirror-AssociationMap"
+];
+
+VerificationTest[
+	MonitorTools`MonitorAssociationMap[If[# === 2, Abort[], f[#]]&, {1, 2, 3}],
+	<| 1 -> f[1]|>,
+	{MonitorTools`MonitorMap::aborted},
+	TestID -> "MonitorAssociationMap-Abortability"
+];
+
 EndTestSection[];
