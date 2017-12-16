@@ -19,6 +19,9 @@ Effectively performs KeyValueMap[foo, a] with a progress bar and other features"
 MonitorSelect::usage = "MonitorSelect[data, test : Identity, n : Infinity]
 Effectively performs Select[data, test, n] with a progress bar and other features";
 
+MonitorCases::usage = "MonitorCases[data, pattern, levelSpec: {1}, n:Infinity]
+Effectively performs Cases[data, pattern, levelSpec, n] with a progress bar and other features";
+
 Begin["`Private`"];
 
 MonitorMap::aborted = "Aborted after `` of `` (~``% complete)";
@@ -194,6 +197,34 @@ MonitorSelect[data_, test_:Identity, n: (_Integer ? Positive | Infinity): Infini
 	True,
 	Select[data, test, n]
 	
+];
+
+Options[MonitorCases] = Options[MonitorMap];
+MonitorCases[data_, pattern_, levelSpec_: {1}, n: (_Integer ? Positive | Infinity): Infinity, opts: OptionsPattern[]] := Which[
+	OptionValue["Monitor"],
+	Module[{sowTag, sowCount = 0},
+		Reap[
+			MonitorMap[
+				With[
+					{cases = Cases[#, pattern, levelSpec - 1]},
+					If[Length[cases] > 0,
+						Sow[cases, sowTag];
+						sowCount++;
+						If[sowCount >= n,
+							Break[];
+						];
+					]
+				]&,
+				data,
+				opts
+			],
+			sowTag
+		] // Last // Replace[{l_List} :> Join @@ l]
+	],
+	
+	True,
+	Cases[data, pattern, levelSpec, n]
+
 ];
 
 End[];

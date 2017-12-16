@@ -220,5 +220,52 @@ VerificationTest[
 ];
 
 
+VerificationTest[
+	MonitorTools`MonitorCases[{1, {2}, 3}, _Integer],
+	{1, 3},
+	TestID -> "MonitorCases-Two-Arguments-Simple-Pattern"
+];
+
+VerificationTest[
+	MonitorTools`MonitorCases[{{1}, 2, 3}, i_Integer -> "A"],
+	{"A", "A"},
+	TestID -> "MonitorCases-Two-Arguments-Rule-Pattern"
+];
+
+VerificationTest[
+	MonitorTools`MonitorCases[{{1}, 2, 3}, i_Integer :> i^2],
+	{4, 9},
+	TestID -> "MonitorCases-Two-Arguments-RuleDelayed"
+];
+
+VerificationTest[
+	MonitorTools`MonitorCases[List /@ Range[1, 3], _Integer],
+	{},
+	TestID -> "MonitorCases-Two-Arguments-Failure-Case"
+];
+
+VerificationTest[
+	MonitorTools`MonitorCases[List /@ Range[1, 3], _Integer, Infinity],
+	{1, 2, 3},
+	TestID -> "MonitorCases-Three-Arguments"
+];
+
+VerificationTest[
+	MonitorTools`MonitorCases[List /@ Range[1, 3], _String, Infinity],
+	{},
+	TestID -> "MonitorCases-Three-Arguments-FailureCase"
+];
+
+VerificationTest[
+	MonitorTools`MonitorCases[List /@ Range[1, 10], _Integer?EvenQ, Infinity, 3],
+	{2, 4, 6},
+	TestID -> "MonitorCases-Four-Arguments"
+];
+
+VerificationTest[
+	MonitorTools`MonitorCases[List /@ Range[1, 10], _String, Infinity, 3],
+	{},
+	TestID -> "MonitorCases-Four-Arguments-Failure-Case"
+];
 
 EndTestSection[];
