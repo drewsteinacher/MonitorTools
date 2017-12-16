@@ -133,14 +133,27 @@ VerificationTest[
 VerificationTest[
 	MonitorTools`MonitorAssociationMap[f, {1, 2, 3}],
 	<| 1 -> f[1], 2 -> f[2], 3 -> f[3]|>,
-	TestID -> "MonitorAssociationMap-Mirror-AssociationMap"
+	TestID -> "MonitorAssociationMap-Mirror-AssociationMap-List"
 ];
 
 VerificationTest[
 	MonitorTools`MonitorAssociationMap[If[# === 2, Abort[], f[#]]&, {1, 2, 3}],
 	<| 1 -> f[1]|>,
 	{MonitorTools`MonitorMap::aborted},
-	TestID -> "MonitorAssociationMap-Abortability"
+	TestID -> "MonitorAssociationMap-Abortability-List"
+];
+
+VerificationTest[
+	MonitorTools`MonitorAssociationMap[Reverse, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	<|1 -> "A", 2 -> "B", 3 -> "C"|>,
+	TestID -> "MonitorAssociationMap-Mirror-AssociationMap-Association"
+];
+
+VerificationTest[
+	MonitorTools`MonitorAssociationMap[If[MatchQ[#, Rule[_, 2]], Abort[], Reverse[#]]&, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	<|1 -> "A"|>,
+	{MonitorTools`MonitorMap::aborted},
+	TestID -> "MonitorAssociationMap-Abortability-Association"
 ];
 
 VerificationTest[

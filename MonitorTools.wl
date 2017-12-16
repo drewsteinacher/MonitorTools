@@ -7,7 +7,7 @@ MonitorMap::usage = "MonitorMap[foo, {x_1, x_2, ...}]
 Effectively performs Map[foo, {x_1, x_2, ...}] with a progress bar and other features.";
 MonitorTable::usage = "MonitorTable[foo, ...]
 Effectively performs Table[foo, ...] with a progress bar and other features.";
-MonitorAssociationMap::usage = "MonitorAssociationMap[foo, {x_1, x_2, ...}]
+MonitorAssociationMap::usage = "MonitorAssociationMap[foo, ...]
 Effectively performs AssociationMap[foo, ...] with a progress bar and other features";
 MonitorKeyMap::usage = "MonitorKeyMap[foo, a_Association]
 Effectively performs KeyMap[foo, ...] with a progress bar and other features";
@@ -108,13 +108,20 @@ MonitorTable[foo_, {i_Symbol, values_List}, opts : OptionsPattern[]] := Which[
 
 Attributes[MonitorAssociationMap] = Attributes[MonitorMap];
 Options[MonitorAssociationMap] = Options[MonitorMap];
-MonitorAssociationMap[foo_, values_List, opts: OptionsPattern[]] := Which[
+MonitorAssociationMap[foo_, values_, opts : OptionsPattern[]] := Which[
 	OptionValue["Monitor"],
-	With[
-		{
-			results = MonitorMap[foo, values, opts]
-		},
-		AssociationThread[Take[values, Length[results]] -> results]
+	Switch[Head[values],
+		
+		Association,
+		Association @ MonitorMap[foo, Normal[values], opts],
+		
+		_,
+		With[
+			{
+				results = MonitorMap[foo, values, opts]
+			},
+			AssociationThread[Take[values, Length[results]] -> results]
+		]
 	],
 	
 	True,
