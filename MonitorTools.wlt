@@ -130,4 +130,69 @@ VerificationTest[
 	TestID -> "Abortability-1"
 ];
 
+VerificationTest[
+	MonitorTools`MonitorAssociationMap[f, {1, 2, 3}],
+	<| 1 -> f[1], 2 -> f[2], 3 -> f[3]|>,
+	TestID -> "MonitorAssociationMap-Mirror-AssociationMap-List"
+];
+
+VerificationTest[
+	MonitorTools`MonitorAssociationMap[If[# === 2, Abort[], f[#]]&, {1, 2, 3}],
+	<| 1 -> f[1]|>,
+	{MonitorTools`MonitorMap::aborted},
+	TestID -> "MonitorAssociationMap-Abortability-List"
+];
+
+VerificationTest[
+	MonitorTools`MonitorAssociationMap[Reverse, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	<|1 -> "A", 2 -> "B", 3 -> "C"|>,
+	TestID -> "MonitorAssociationMap-Mirror-AssociationMap-Association"
+];
+
+VerificationTest[
+	MonitorTools`MonitorAssociationMap[If[MatchQ[#, Rule[_, 2]], Abort[], Reverse[#]]&, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	<|1 -> "A"|>,
+	{MonitorTools`MonitorMap::aborted},
+	TestID -> "MonitorAssociationMap-Abortability-Association"
+];
+
+VerificationTest[
+	MonitorTools`MonitorKeyMap[f, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	<|f["A"] -> 1, f["B"] -> 2, f["C"] -> 3|>,
+	TestID -> "MonitorKeyMap-Mirror-KeyMap"
+];
+
+VerificationTest[
+	MonitorTools`MonitorKeyMap[If[# === "B", Abort[], f[#]]&, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	<|f["A"] -> 1|>,
+	{MonitorTools`MonitorMap::aborted},
+	TestID -> "MonitorKeyMap-Abortability"
+];
+
+VerificationTest[
+	MonitorTools`MonitorApplyAt[f, {"A" -> 1, "B" -> 2, "C" -> 3}],
+	{f["A", 1], f["B", 2], f["C", 3]},
+	TestID -> "MonitorApplyAt-Mirror-ApplyAt"
+];
+
+VerificationTest[
+	MonitorTools`MonitorApplyAt[If[#1 === "B", Abort[], f[##]]&, {"A" -> 1, "B" -> 2, "C" -> 3}],
+	{f["A", 1]},
+	{MonitorTools`MonitorMap::aborted},
+	TestID -> "MonitorApplyAt-Abortability"
+];
+
+VerificationTest[
+	MonitorTools`MonitorKeyValueMap[f, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	{f["A", 1], f["B", 2], f["C", 3]},
+	TestID -> "MonitorKeyValueMap-Mirror-KeyValueMap"
+];
+
+VerificationTest[
+	MonitorTools`MonitorKeyValueMap[If[#1 === "B", Abort[], f[##]]&, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	{f["A", 1]},
+	{MonitorTools`MonitorMap::aborted},
+	TestID -> "MonitorKeyValueMap-Abortability"
+];
+
 EndTestSection[];
