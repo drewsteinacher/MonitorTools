@@ -156,4 +156,17 @@ VerificationTest[
 	TestID -> "MonitorKeyMap-Abortability"
 ];
 
+VerificationTest[
+	MonitorTools`MonitorApplyAt[f, {"A" -> 1, "B" -> 2, "C" -> 3}],
+	{f["A", 1], f["B", 2], f["C", 3]},
+	TestID -> "MonitorApplyAt-Mirror-ApplyAt"
+];
+
+VerificationTest[
+	MonitorTools`MonitorApplyAt[If[#1 === "B", Abort[], f[##]]&, {"A" -> 1, "B" -> 2, "C" -> 3}],
+	{f["A", 1]},
+	{MonitorTools`MonitorMap::aborted},
+	TestID -> "MonitorApplyAt-Abortability"
+];
+
 EndTestSection[];

@@ -11,6 +11,8 @@ MonitorAssociationMap::usage = "MonitorAssociationMap[foo, {x_1, x_2, ...}]
 Effectively performs AssociationMap[foo, ...] with a progress bar and other features";
 MonitorKeyMap::usage = "MonitorKeyMap[foo, a_Association]
 Effectively performs KeyMap[foo, ...] with a progress bar and other features";
+MonitorApplyAt::usage = "MonitorApplyAt[foo, l_List]
+Effectively performs foo @@@ l with a progress bar and other features";
 
 Begin["`Private`"];
 
@@ -130,6 +132,17 @@ MonitorKeyMap[foo_, a_Association, opts: OptionsPattern[]] := Which[
 	
 	True,
 	AssociationMap[foo, a]
+
+];
+
+Attributes[MonitorApplyAt] = Attributes[MonitorMap];
+Options[MonitorApplyAt] = Options[MonitorMap];
+MonitorApplyAt[foo_, values_, opts: OptionsPattern[]] := Which[
+	OptionValue["Monitor"],
+	MonitorMap[Apply[foo], values, opts],
+	
+	True,
+	f @@@ values
 
 ];
 
