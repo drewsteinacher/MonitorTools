@@ -16,6 +16,8 @@ Effectively performs foo @@@ l with a progress bar and other features";
 MonitorKeyValueMap::usage = "MonitorKeyValueMap[foo, a_Association]
 Effectively performs KeyValueMap[foo, a] with a progress bar and other features";
 
+MonitorSelect::usage = "MonitorSelect[data, test : Identity, n : Infinity]
+Effectively performs Select[data, test, n] with a progress bar and other features";
 
 Begin["`Private`"];
 
@@ -165,6 +167,33 @@ MonitorKeyValueMap[foo_, a_Association, opts: OptionsPattern[]] := Which[
 	True,
 	KeyValueMap[f, values]
 
+];
+
+Options[MonitorSelect] = Options[MonitorMap];
+MonitorSelect[data_, test_:Identity, n: (_Integer ? Positive | Infinity): Infinity, opts: OptionsPattern[]] := Which[
+	OptionValue["Monitor"],
+	Module[{sowTag, sowCount = 0},
+		Reap[
+			MonitorMap[
+				With[{},
+					If[TrueQ[test[#]],
+						Sow[#, sowTag];
+						sowCount++;
+						If[sowCount >= n,
+							Break[];
+						];
+					];
+				]&,
+				data,
+				opts
+			],
+			sowTag
+		] // Last // Replace[{l_List} :> l]
+	],
+	
+	True,
+	Select[data, test, n]
+	
 ];
 
 End[];

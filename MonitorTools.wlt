@@ -195,4 +195,30 @@ VerificationTest[
 	TestID -> "MonitorKeyValueMap-Abortability"
 ];
 
+VerificationTest[
+	MonitorTools`MonitorSelect[Range[1, 10], EvenQ],
+	{2, 4, 6, 8, 10},
+	TestID -> "MonitorSelect-Two-Arguments"
+];
+
+VerificationTest[
+	MonitorTools`MonitorSelect[Range[1, 10], False &],
+	{},
+	TestID -> "MonitorSelect-Two-Arguments-Failure-Case"
+];
+
+VerificationTest[
+	MonitorTools`MonitorSelect[Range[1, 10], EvenQ, 3],
+	{2, 4, 6},
+	TestID -> "MonitorSelect-Three-Arguments"
+];
+
+VerificationTest[
+	MonitorTools`MonitorSelect[Range[1, 10], False &, 3],
+	{},
+	TestID -> "MonitorSelect-Three-Arguments-Failure-Case"
+];
+
+
+
 EndTestSection[];
