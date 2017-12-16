@@ -143,4 +143,17 @@ VerificationTest[
 	TestID -> "MonitorAssociationMap-Abortability"
 ];
 
+VerificationTest[
+	MonitorTools`MonitorKeyMap[f, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	<|f["A"] -> 1, f["B"] -> 2, f["C"] -> 3|>,
+	TestID -> "MonitorKeyMap-Mirror-KeyMap"
+];
+
+VerificationTest[
+	MonitorTools`MonitorKeyMap[If[# === "B", Abort[], f[#]]&, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	<|f["A"] -> 1|>,
+	{MonitorTools`MonitorMap::aborted},
+	TestID -> "MonitorKeyMap-Abortability"
+];
+
 EndTestSection[];

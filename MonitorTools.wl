@@ -9,6 +9,8 @@ MonitorTable::usage = "MonitorTable[foo, ...]
 Effectively performs Table[foo, ...] with a progress bar and other features.";
 MonitorAssociationMap::usage = "MonitorAssociationMap[foo, {x_1, x_2, ...}]
 Effectively performs AssociationMap[foo, ...] with a progress bar and other features";
+MonitorKeyMap::usage = "MonitorKeyMap[foo, a_Association]
+Effectively performs KeyMap[foo, ...] with a progress bar and other features";
 
 Begin["`Private`"];
 
@@ -21,7 +23,7 @@ Options[iMonitorMap] = {
 	TrackedSymbols -> {},
 	"ProgressMessageFunction" -> (""&)
 };
-iMonitorMap[foo_, values_List, opts : OptionsPattern[]] := Module[
+iMonitorMap[foo_, values_, opts : OptionsPattern[]] := Module[
 	{v, counter, sowTag},
 	counter = 0;
 	Monitor[
@@ -99,7 +101,7 @@ MonitorTable[foo_, {i_Symbol, values_List}, opts : OptionsPattern[]] := Which[
 	Table[foo, {i, values}]
 ];
 
-Attributes[MonitorAssociationMap];
+Attributes[MonitorAssociationMap] = Attributes[MonitorMap];
 Options[MonitorAssociationMap] = Options[MonitorMap];
 MonitorAssociationMap[foo_, values_List, opts: OptionsPattern[]] := Which[
 	OptionValue["Monitor"],
@@ -113,6 +115,22 @@ MonitorAssociationMap[foo_, values_List, opts: OptionsPattern[]] := Which[
 	True,
 	AssociationMap[foo, values]
 	
+];
+
+Attributes[MonitorKeyMap] = Attributes[MonitorMap];
+Options[MonitorKeyMap] = Options[MonitorMap];
+MonitorKeyMap[foo_, a_Association, opts: OptionsPattern[]] := Which[
+	OptionValue["Monitor"],
+	With[
+		{
+			modifiedKeys = MonitorMap[foo, Keys[a], opts]
+		},
+		AssociationThread[modifiedKeys -> Take[Values[a], Length[modifiedKeys]]]
+	],
+	
+	True,
+	AssociationMap[foo, a]
+
 ];
 
 End[];
