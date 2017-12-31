@@ -99,7 +99,7 @@ Options[MonitorMap] = Join[
 	Options[iMonitorMap],
 	Options[monitorDisplay]
 ];
-MonitorMap[foo_, values_List, opts : OptionsPattern[]] := Which[
+MonitorMap[foo_, values_, opts : OptionsPattern[]] := Which[
 	OptionValue["Monitor"],
 	iMonitorMap[foo, values, opts],
 	
