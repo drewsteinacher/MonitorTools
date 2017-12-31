@@ -34,7 +34,19 @@ Options[iMonitorMap] = {
 	"ProgressMessageFunction" -> (""&)
 };
 iMonitorMap[foo_, values_, opts : OptionsPattern[]] := Module[
-	{v, counter, sowTag},
+	{
+		v, counter, sowTag,
+		progressMessageFunction, progressMessageFunctionArguments, passCurrentValueQ,
+		updateInterval, trackedSymbols, valueCount
+	},
+	
+	valueCount = Length[values];
+	
+	progressMessageFunction = OptionValue["ProgressMessageFunction"];
+	passCurrentValueQ = Not @ FreeQ[progressMessageFunction, Slot["CurrentValue"]];
+	updateInterval = OptionValue[UpdateInterval];
+	trackedSymbols = OptionValue[TrackedSymbols];
+	
 	counter = 0;
 	Monitor[
 		Reap[
@@ -56,25 +68,28 @@ iMonitorMap[foo_, values_, opts : OptionsPattern[]] := Module[
 				(* Basic progress monitoring *)
 					Row[
 						{
-							ProgressIndicator[counter, {0, Length[values]}],
-							StringTemplate["``/``"][counter, Length[values]]
+							ProgressIndicator[counter, {0, valueCount}],
+							StringTemplate["``/``"][counter, valueCount]
 						},
 						Spacer[1]
 					],
 				
 				(* Custom function for showing progress *)
-					OptionValue["ProgressMessageFunction"][
-						<|
-							"CurrentValue" -> v,
-							"CurrentCount" -> counter,
-							"StartCount" -> 0,
-							"EndCount" -> Length[values]
-						|>
-					]
+					progressMessageFunctionArguments = <|
+						"CurrentCount" -> counter,
+						"StartCount" -> 0,
+						"EndCount" -> length
+					|>;
+					
+					If[passCurrentValueQ,
+						AppendTo[progressMessageFunctionArguments, "CurrentValue" -> v];
+					];
+					
+					progressMessageFunction[progressMessageFunctionArguments]
 				}
 			],
-			UpdateInterval -> OptionValue[UpdateInterval],
-			TrackedSymbols -> OptionValue[TrackedSymbols]
+			UpdateInterval -> updateInterval,
+			TrackedSymbols -> trackedSymbols
 		],
 		OptionValue["DisplayThreshold"]
 	]
