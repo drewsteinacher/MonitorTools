@@ -16,6 +16,11 @@ Effectively performs foo @@@ l with a progress bar and other features";
 MonitorKeyValueMap::usage = "MonitorKeyValueMap[foo, a_Association]
 Effectively performs KeyValueMap[foo, a] with a progress bar and other features";
 
+MonitorSelect::usage = "MonitorSelect[data, test : Identity, n : Infinity]
+Effectively performs Select[data, test, n] with a progress bar and other features";
+
+MonitorCases::usage = "MonitorCases[data, pattern, levelSpec: {1}, n:Infinity]
+Effectively performs Cases[data, pattern, levelSpec, n] with a progress bar and other features";
 
 Begin["`Private`"];
 
@@ -29,7 +34,19 @@ Options[iMonitorMap] = {
 	"ProgressMessageFunction" -> (""&)
 };
 iMonitorMap[foo_, values_, opts : OptionsPattern[]] := Module[
-	{v, counter, sowTag},
+	{
+		v, counter, sowTag,
+		progressMessageFunction, progressMessageFunctionArguments, passCurrentValueQ,
+		updateInterval, trackedSymbols, valueCount
+	},
+	
+	valueCount = Length[values];
+	
+	progressMessageFunction = OptionValue["ProgressMessageFunction"];
+	passCurrentValueQ = Not @ FreeQ[progressMessageFunction, Slot["CurrentValue"]];
+	updateInterval = OptionValue[UpdateInterval];
+	trackedSymbols = OptionValue[TrackedSymbols];
+	
 	counter = 0;
 	Monitor[
 		Reap[
@@ -51,25 +68,28 @@ iMonitorMap[foo_, values_, opts : OptionsPattern[]] := Module[
 				(* Basic progress monitoring *)
 					Row[
 						{
-							ProgressIndicator[counter, {0, Length[values]}],
-							StringTemplate["``/``"][counter, Length[values]]
+							ProgressIndicator[counter, {0, valueCount}],
+							StringTemplate["``/``"][counter, valueCount]
 						},
 						Spacer[1]
 					],
 				
 				(* Custom function for showing progress *)
-					OptionValue["ProgressMessageFunction"][
-						<|
-							"CurrentValue" -> v,
-							"CurrentCount" -> counter,
-							"StartCount" -> 0,
-							"EndCount" -> Length[values]
-						|>
-					]
+					progressMessageFunctionArguments = <|
+						"CurrentCount" -> counter,
+						"StartCount" -> 0,
+						"EndCount" -> length
+					|>;
+					
+					If[passCurrentValueQ,
+						AppendTo[progressMessageFunctionArguments, "CurrentValue" -> v];
+					];
+					
+					progressMessageFunction[progressMessageFunctionArguments]
 				}
 			],
-			UpdateInterval -> OptionValue[UpdateInterval],
-			TrackedSymbols -> OptionValue[TrackedSymbols]
+			UpdateInterval -> updateInterval,
+			TrackedSymbols -> trackedSymbols
 		],
 		OptionValue["DisplayThreshold"]
 	]
@@ -79,7 +99,7 @@ Options[MonitorMap] = Join[
 	Options[iMonitorMap],
 	Options[monitorDisplay]
 ];
-MonitorMap[foo_, values_List, opts : OptionsPattern[]] := Which[
+MonitorMap[foo_, values_, opts : OptionsPattern[]] := Which[
 	OptionValue["Monitor"],
 	iMonitorMap[foo, values, opts],
 	
@@ -164,6 +184,61 @@ MonitorKeyValueMap[foo_, a_Association, opts: OptionsPattern[]] := Which[
 	
 	True,
 	KeyValueMap[f, values]
+
+];
+
+Options[MonitorSelect] = Options[MonitorMap];
+MonitorSelect[data_, test_:Identity, n: (_Integer ? Positive | Infinity): Infinity, opts: OptionsPattern[]] := Which[
+	OptionValue["Monitor"],
+	Module[{sowTag, sowCount = 0},
+		Reap[
+			MonitorMap[
+				With[{},
+					If[TrueQ[test[#]],
+						Sow[#, sowTag];
+						sowCount++;
+						If[sowCount >= n,
+							Break[];
+						];
+					];
+				]&,
+				data,
+				opts
+			],
+			sowTag
+		] // Last // Replace[{l_List} :> l]
+	],
+	
+	True,
+	Select[data, test, n]
+	
+];
+
+Options[MonitorCases] = Options[MonitorMap];
+MonitorCases[data_, pattern_, levelSpec_: {1}, n: (_Integer ? Positive | Infinity): Infinity, opts: OptionsPattern[]] := Which[
+	OptionValue["Monitor"],
+	Module[{sowTag, sowCount = 0},
+		Reap[
+			MonitorMap[
+				With[
+					{cases = Cases[#, pattern, levelSpec - 1]},
+					If[Length[cases] > 0,
+						Sow[cases, sowTag];
+						sowCount++;
+						If[sowCount >= n,
+							Break[];
+						];
+					]
+				]&,
+				data,
+				opts
+			],
+			sowTag
+		] // Last // Replace[{l_List} :> Join @@ l]
+	],
+	
+	True,
+	Cases[data, pattern, levelSpec, n]
 
 ];
 
