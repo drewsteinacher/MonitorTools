@@ -273,8 +273,13 @@ Options[MonitorTestReport] = Join[Options[MonitorMap], Options[TestReport]];
 MonitorTestReport[fileName_String, opts: OptionsPattern[]] :=
 	iMonitorTestReport[fileName, opts];
 
-MonitorTestReport[tests: {(Inactive[VerificationTest][__] | _VerificationTest)..}, opts:OptionsPattern[]] :=
+MonitorTestReport[tests: {(Inactive[VerificationTest][__])..}, opts:OptionsPattern[]] :=
     iMonitorTestReport[tests, opts];
+
+MonitorTestReport[tests: {VerificationTest__}, opts:OptionsPattern[]] := With[
+	{inactivatedTests = List @@ Inactivate[tests]},
+	iMonitorTestReport[inactivatedTests, opts]
+];
 
 MonitorTestReport[x_, rest___] := iMonitorTestReport[Evaluate @ x, rest];
 

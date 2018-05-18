@@ -312,4 +312,19 @@ VerificationTest[
 	SameTest -> MatchQ
 ];
 
+VerificationTest[
+	Module[{sowTag},
+		Reap[
+			MonitorTestReport[
+				{
+					VerificationTest[Sow[1, sowTag]; 1 + 2, 3],
+					VerificationTest[Sow[2, sowTag]; 2 + 2, 4]
+				}
+			]
+		][[-1, 1]]
+	],
+	{1, 2},
+	TestID -> "MonitorTestReport-no-evaluation-leaks"
+];
+
 EndTestSection[];
