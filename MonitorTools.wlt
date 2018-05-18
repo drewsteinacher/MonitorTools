@@ -13,6 +13,18 @@ VerificationTest[
 ];
 
 VerificationTest[
+	MonitorTools`MonitorMap[foo, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	<|"A" -> foo[1], "B" -> foo[2], "C" -> foo[3]|>,
+	TestID -> "Mirror-Map-Association"
+];
+
+VerificationTest[
+	MonitorTools`MonitorMap[Sin, blah[1, 2, 3]],
+	blah[Sin[1], Sin[2], Sin[3]],
+	TestID -> "Mirror-Map-Association"
+];
+
+VerificationTest[
 	Reap[
 		MonitorTools`MonitorMap[
 			Identity,
@@ -266,6 +278,53 @@ VerificationTest[
 	MonitorTools`MonitorCases[List /@ Range[1, 10], _String, Infinity, 3],
 	{},
 	TestID -> "MonitorCases-Four-Arguments-Failure-Case"
+];
+
+VerificationTest[
+	MonitorMapIndexed[foo, CharacterRange["A", "E"]],
+	{foo["A", {1}], foo["B", {2}], foo["C", {3}], foo["D", {4}], foo["E", {5}]},
+	TestID -> "MonitorMapIndexed-List"
+];
+
+VerificationTest[
+	MonitorMapIndexed[foo, blah @@ CharacterRange["A", "E"]],
+	blah[foo["A", {1}], foo["B", {2}], foo["C", {3}], foo["D", {4}], foo["E", {5}]],
+	TestID -> "MonitorMapIndexed-arbitrary-head"
+];
+
+VerificationTest[
+	MonitorTools`MonitorMapIndexed[foo, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	<|"A" -> foo[1, {Key["A"]}], "B" -> foo[2, {Key["B"]}], "C" -> foo[3, {Key["C"]}]|>,
+	TestID -> "MonitorMapIndexed-Association"
+];
+
+VerificationTest[
+	MonitorTools`MonitorTestReport["SimpleTestSuite.wlt"],
+	_TestReportObject,
+	TestID -> "MonitorTestReport-File",
+	SameTest -> MatchQ
+];
+
+VerificationTest[
+	MonitorTools`MonitorTestReport[{VerificationTest[1 + 2, 3], VerificationTest[2 + 2, 4]}],
+	_TestReportObject,
+	TestID -> "MonitorTestReport-VerificationTest-List",
+	SameTest -> MatchQ
+];
+
+VerificationTest[
+	Module[{sowTag},
+		Reap[
+			MonitorTestReport[
+				{
+					VerificationTest[Sow[1, sowTag]; 1 + 2, 3],
+					VerificationTest[Sow[2, sowTag]; 2 + 2, 4]
+				}
+			]
+		][[-1, 1]]
+	],
+	{1, 2},
+	TestID -> "MonitorTestReport-no-evaluation-leaks"
 ];
 
 EndTestSection[];
