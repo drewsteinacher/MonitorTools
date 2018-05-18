@@ -13,6 +13,18 @@ VerificationTest[
 ];
 
 VerificationTest[
+	MonitorTools`MonitorMap[foo, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	<|"A" -> foo[1], "B" -> foo[2], "C" -> foo[3]|>,
+	TestID -> "Mirror-Map-Association"
+];
+
+VerificationTest[
+	MonitorTools`MonitorMap[Sin, blah[1, 2, 3]],
+	blah[Sin[1], Sin[2], Sin[3]],
+	TestID -> "Mirror-Map-Association"
+];
+
+VerificationTest[
 	Reap[
 		MonitorTools`MonitorMap[
 			Identity,

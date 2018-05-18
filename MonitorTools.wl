@@ -35,7 +35,7 @@ Options[iMonitorMap] = {
 	TrackedSymbols -> {},
 	"ProgressMessageFunction" -> (""&)
 };
-iMonitorMap[foo_, values_, opts : OptionsPattern[]] := Module[
+iMonitorMap[foo_, values_List, opts : OptionsPattern[]] := Module[
 	{
 		v, counter, sowTag,
 		progressMessageFunction, progressMessageFunctionArguments, passCurrentValueQ,
@@ -96,6 +96,13 @@ iMonitorMap[foo_, values_, opts : OptionsPattern[]] := Module[
 		OptionValue["DisplayThreshold"]
 	]
 ];
+
+iMonitorMap[foo_, a_Association, opts___] := With[
+	{values = MonitorMap[foo, Values[a], opts]},
+	AssociationThread[Take[Keys[a], Length[values]], values]
+];
+
+iMonitorMap[foo_, x_, opts___] := Head[x] @@ MonitorMap[foo, List @@ x, opts];
 
 Options[MonitorMap] = Join[
 	Options[iMonitorMap],
