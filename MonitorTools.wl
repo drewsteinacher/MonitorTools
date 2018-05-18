@@ -24,6 +24,9 @@ Effectively performs Select[data, test, n] with a progress bar and other feature
 MonitorCases::usage = "MonitorCases[data, pattern, levelSpec: {1}, n:Infinity]
 Effectively performs Cases[data, pattern, levelSpec, n] with a progress bar and other features";
 
+MonitorTestReport::usage = "MonitorTestReport[testSuite]
+Effectively performs TestReport[testSuite] with a progress bar and other features";
+
 Begin["`Private`"];
 
 MonitorMap::aborted = "Aborted after `` of `` (~``% complete)";
@@ -263,6 +266,68 @@ MonitorCases[data_, pattern_, levelSpec_: {1}, n: (_Integer ? Positive | Infinit
 	True,
 	Cases[data, pattern, levelSpec, n]
 
+];
+
+Attributes[MonitorTestReport] = {HoldFirst};
+Options[MonitorTestReport] = Join[Options[MonitorMap], Options[TestReport]];
+MonitorTestReport[fileName_String, opts: OptionsPattern[]] :=
+	iMonitorTestReport[fileName, opts];
+
+MonitorTestReport[tests: {(Inactive[VerificationTest][__] | _VerificationTest)..}, opts:OptionsPattern[]] :=
+    iMonitorTestReport[tests, opts];
+
+MonitorTestReport[x_, rest___] := iMonitorTestReport[Evaluate @ x, rest];
+
+Attributes[iMonitorTestReport] = {HoldFirst};
+Options[iMonitorTestReport] = Join[Options[MonitorTestReport], {"Title" -> "Test Report"}];
+
+iMonitorTestReport[fileName_String, opts: OptionsPattern[]] := With[
+	{
+		inactivatedTests = Cases[Import[fileName, "InactivatedExpressions"], Inactive[VerificationTest][___], {2}]
+	},
+	iMonitorTestReport[inactivatedTests, "Title" -> "Test Report: " <> FileNameTake[fileName], opts]
+];
+
+iMonitorTestReport[inactivatedTests: {(Inactive[VerificationTest][___] | _VerificationTest)..}, opts: OptionsPattern[]] := Module[
+	{
+		timeElapsed, testResults,
+		succeededTestIndices, failedTestIndices, failedWrongResultTestIndices, failedMessagesTestIndices, errorTestIndices
+	},
+	timeElapsed = First @ AbsoluteTiming[
+		testResults = MonitorMap[
+			Activate,
+			AssociationThread[Range[Length[inactivatedTests]] -> inactivatedTests],
+			Sequence @@ FilterRules[{opts}, Options[MonitorMap]]
+		];
+	];
+	
+	succeededTestIndices = Keys @ Select[testResults, #["Outcome"] === "Success"&];
+	failedTestIndices = Keys @ Select[testResults, MatchQ[#["Outcome"], "Failure" | "MessagesFailure"]&];
+	failedWrongResultTestIndices = Keys @ Select[testResults, #["Outcome"] === "Failure"&];
+	failedMessagesTestIndices = Keys @ Select[testResults, #["Outcome"] === "MessagesFailure"&];
+	errorTestIndices = Keys @ Select[testResults, #["Outcome"] === "Error"&];
+	
+	TestReportObject[
+		<|
+			"Title" -> OptionValue["Title"],
+		
+			(* TODO: Convert to hours, minutes, etc... if needed? *)
+			"TimeElapsed" -> Quantity[timeElapsed, "Seconds"],
+			
+			"TestsSucceededCount" -> Length[succeededTestIndices],
+			"TestsFailedCount" -> Length[failedTestIndices],
+			"TestsFailedWrongResultsCount" -> Length[failedWrongResultTestIndices],
+			"TestsFailedWithMessagesCount" -> Length[failedMessagesTestIndices],
+			"TestsFailedWithErrorsCount" -> Length[errorTestIndices],
+			"Aborted" -> Length[testResults] =!= Length[inactivatedTests],
+			"TestResults" -> testResults,
+			"TestSucceededIndices" -> succeededTestIndices,
+			"TestsFailedIndices" -> failedTestIndices,
+			"TestsFailedWrongResultsIndices" -> failedWrongResultTestIndices,
+			"TestsFailedWithMessagesIndices" -> failedMessagesTestIndices,
+			"TestsFailedWithErrorsIndices" -> errorTestIndices
+		|>
+	]
 ];
 
 End[];

@@ -293,9 +293,23 @@ VerificationTest[
 ];
 
 VerificationTest[
-	MonitorMapIndexed[foo, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	MonitorTools`MonitorMapIndexed[foo, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
 	<|"A" -> foo[1, {Key["A"]}], "B" -> foo[2, {Key["B"]}], "C" -> foo[3, {Key["C"]}]|>,
 	TestID -> "MonitorMapIndexed-Association"
+];
+
+VerificationTest[
+	MonitorTools`MonitorTestReport["SimpleTestSuite.wlt"],
+	_TestReportObject,
+	TestID -> "MonitorTestReport-File",
+	SameTest -> MatchQ
+];
+
+VerificationTest[
+	MonitorTools`MonitorTestReport[{VerificationTest[1 + 2, 3], VerificationTest[2 + 2, 4]}],
+	_TestReportObject,
+	TestID -> "MonitorTestReport-VerificationTest-List",
+	SameTest -> MatchQ
 ];
 
 EndTestSection[];
