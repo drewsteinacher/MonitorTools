@@ -5,6 +5,8 @@ BeginPackage["MonitorTools`"];
 
 MonitorMap::usage = "MonitorMap[foo, {x_1, x_2, ...}]
 Effectively performs Map[foo, {x_1, x_2, ...}] with a progress bar and other features.";
+MonitorMapIndexed::usage = "MonitorMapIndexed[foo, {x_1, x_2}]
+Effectively performs MonitorMapIndexed[foo, {x_1, x_2, ...}] with a progress bar and other features.";
 MonitorTable::usage = "MonitorTable[foo, ...]
 Effectively performs Table[foo, ...] with a progress bar and other features.";
 MonitorAssociationMap::usage = "MonitorAssociationMap[foo, ...]
@@ -108,6 +110,20 @@ MonitorMap[foo_, values_, opts : OptionsPattern[]] := Which[
 ];
 
 
+Options[MonitorMapIndexed] = Options[MonitorMap];
+MonitorMapIndexed[foo_, values_, opts : OptionsPattern[]] := Which[
+	OptionValue["Monitor"],
+	iMonitorMapIndexed[foo, values, opts],
+	
+	True,
+	MapIndexed[foo, values]
+];
+
+iMonitorMapIndexed[foo_, values_, opts___] :=
+	Head[values] @@ MonitorApplyAt[foo, Transpose[{List @@ values, List /@ Range[Length[values]]}], opts];
+
+iMonitorMapIndexed[foo_, values_Association, opts___] :=
+    Association @ MonitorKeyValueMap[#1 -> foo[#2, {Key[#1]}]&, values, opts];
 
 Attributes[MonitorTable] = {HoldFirst};
 Options[MonitorTable] = Options[MonitorMap];

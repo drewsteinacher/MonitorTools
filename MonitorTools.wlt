@@ -268,4 +268,22 @@ VerificationTest[
 	TestID -> "MonitorCases-Four-Arguments-Failure-Case"
 ];
 
+VerificationTest[
+	MonitorMapIndexed[foo, CharacterRange["A", "E"]],
+	{foo["A", {1}], foo["B", {2}], foo["C", {3}], foo["D", {4}], foo["E", {5}]},
+	TestID -> "MonitorMapIndexed-List"
+];
+
+VerificationTest[
+	MonitorMapIndexed[foo, blah @@ CharacterRange["A", "E"]],
+	blah[foo["A", {1}], foo["B", {2}], foo["C", {3}], foo["D", {4}], foo["E", {5}]],
+	TestID -> "MonitorMapIndexed-arbitrary-head"
+];
+
+VerificationTest[
+	MonitorMapIndexed[foo, <|"A" -> 1, "B" -> 2, "C" -> 3|>],
+	<|"A" -> foo[1, {Key["A"]}], "B" -> foo[2, {Key["B"]}], "C" -> foo[3, {Key["C"]}]|>,
+	TestID -> "MonitorMapIndexed-Association"
+];
+
 EndTestSection[];
